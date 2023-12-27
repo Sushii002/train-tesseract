@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Update and install depedencies
 RUN apt-get update && \
-    apt-get install -y wget unzip bc vim python3-pip libleptonica-dev git
+    apt-get install -y wget unzip bc nano python3-pip libleptonica-dev git libhdf5-dev
 
 # Packages to complie Tesseract
 RUN apt-get install -y --reinstall make && \
@@ -31,6 +31,14 @@ RUN mkdir src && cd /app/src && \
 
 # Setting the data prefix
 ENV TESSDATA_PREFIX=/usr/local/share/tessdata
+
+# Upgrades
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade setuptools wheel
+
+
+# Skip RUST installation for cryptography dependence
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 # Install libraries using pip installer
 RUN pip3 install -r requirements.txt
