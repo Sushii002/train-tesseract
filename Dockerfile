@@ -1,50 +1,49 @@
 # Set docker image
-FROM ubuntu:18.04
+FROM debian:11
 
 # Skip the configuration part
 ENV DEBIAN_FRONTEND noninteractive
 
-# Update and install depedencies
+# # Update and install depedencies
 RUN apt-get update && \
-    apt-get install -y wget unzip bc nano python3-pip libleptonica-dev git libhdf5-dev
+    apt-get install -y wget unzip bc nano bash git python3 python3-pip libicu-dev libpango1.0-dev libcairo2-dev libc6
 
-# Packages to complie Tesseract
+# # Packages to complie Tesseract
 RUN apt-get install -y --reinstall make && \
-    apt-get install -y g++ autoconf automake libtool pkg-config libpng-dev libjpeg8-dev libtiff5-dev libicu-dev \
-        libpango1.0-dev autoconf-archive
+    apt-get install -y libtool libleptonica-dev
+#    autoconf automake libtool pkg-config libpng-dev libjpeg8-dev libtiff5-dev libicu-dev \
+#         libpango1.0-dev autoconf-archive
 
-# Set working directory
+# # Set working directory
 WORKDIR /app
 
-# Copy requirements into the container at /app
+# # Copy requirements into the container at /app
 COPY requirements.txt ./
 
-# Getting tesstrain: beware the source might change or not being available
-# Complie Tesseract with training options (also feel free to update Tesseract versions and such!)
-# Getting data: beware the source might change or not being available
+# # Getting tesstrain: beware the source might change or not being available
+# # Complie Tesseract with training options (also feel free to update Tesseract versions and such!)
+# # Getting data: beware the source might change or not being available
 RUN mkdir src && cd /app/src && \
     wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.zip && \
 	unzip 4.1.0.zip && \
     cd /app/src/tesseract-4.1.0 && ./autogen.sh && ./configure && make && make install && ldconfig && \
     make training && make training-install && \
-    cd /usr/local/share/tessdata && wget https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata
+    cd /usr/local/share/tessdata && wget https://github.com/tesseract-ocr/tessdata_best/raw/main/fra.traineddata
 
-# Setting the data prefix
-ENV TESSDATA_PREFIX=/usr/local/share/tessdata
+# # Setting the data prefix
+# ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 
-# Upgrades
+# # Upgrades
 RUN pip3 install --upgrade pip
-RUN pip3 install --upgrade setuptools wheel
+RUN pip3 install --upgrade setuptools
+#wheel
 
 
-# Skip RUST installation for cryptography dependence
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-
-# Install libraries using pip installer
+# # Install libraries using pip installer
 RUN pip3 install -r requirements.txt
 
-# Set the locale
-RUN apt-get install -y locales && locale-gen en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US.UTF-8
+# # Set the locale
+# RUN apt-get install -y locales && locale-gen en_US.UTF-8
+# ENV LC_ALL=en_US.UTF-8
+# ENV LANG=en_US.UTF-8
+# ENV LANGUAGE=en_US.UTF-8

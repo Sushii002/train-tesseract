@@ -2,8 +2,6 @@
 
 Docker Implementation to train Tesseract v. 4
 
-Tesseract 4.0 comes with an LSTM model that can be retrained to improve OCR Accuracy.
-
 ## Before Training
 
 - [Choose a name for your model](https://github.com/tesseract-ocr/tesstrain#choose-model-name)
@@ -16,15 +14,22 @@ Generate ground truth data with set of line images (.tiff or .png) and original 
 
 ## Training
 
-- Start a container using the specifications in the Docker file using docker-compose;  Run 
+- Start to build the docker image by running the command in the root folder : 
 
 ```shell
-docker-compose -f docker.dev.yml up
+docker build -t <build_name> .
 ```
+
+- Run the docker immage : 
+
+```shell
+docker run -d <build_name>
+```
+
 - Execute and Interactive Bash Terminal in the running container using
 
 ```shell
-docker exec -ti train-ocr bash
+docker exec -ti <build_name> bash
 ```
  - Create a ground truth folder and migrate all the training images and transcriptions into it
  -
