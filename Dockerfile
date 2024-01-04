@@ -1,5 +1,5 @@
 # Set docker image
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # Skip the configuration part
 ENV DEBIAN_FRONTEND noninteractive
@@ -26,25 +26,31 @@ RUN mkdir src && cd /app/src && \
     wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.zip && \
 	unzip 4.1.0.zip && \
     cd /app/src/tesseract-4.1.0 && ./autogen.sh && ./configure && make && make install && ldconfig && \
-    make training && make training-install && \
-    cd /usr/local/share/tessdata && wget https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata
+    make training && make training-install
+
+# Copy the current directory contents into the container at /usr/local/share/tessdata
+COPY fra.traineddata /usr/local/share/tessdata/
+COPY eng.traineddata /usr/local/share/tessdata/
 
 # Setting the data prefix
 ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 
 # Upgrades
 RUN pip3 install --upgrade pip
-RUN pip3 install --upgrade setuptools wheel
+RUN pip3 install --upgrade setuptools
+# wheel
 
 
 # Skip RUST installation for cryptography dependence
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
+# ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 # Install libraries using pip installer
 RUN pip3 install -r requirements.txt
 
 # Set the locale
-RUN apt-get install -y locales && locale-gen en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US.UTF-8
+# RUN apt-get install -y locales && locale-gen en_US.UTF-8
+# ENV LC_ALL=en_US.UTF-8
+# ENV LANG=en_US.UTF-8
+# ENV LANGUAGE=en_US.UTF-8
+
+# make training MODEL_NAME=dws START_MODEL=fra PSM=7 TESSDATA=/usr/local/share/tessdata
