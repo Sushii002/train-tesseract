@@ -1,5 +1,5 @@
 # Set docker image
-FROM debian:11
+FROM ubuntu:22.04
 
 # Skip the configuration part
 ENV DEBIAN_FRONTEND noninteractive
@@ -10,9 +10,7 @@ RUN apt-get update && \
 
 # # Packages to complie Tesseract
 RUN apt-get install -y --reinstall make && \
-    apt-get install -y libtool libleptonica-dev
-#    autoconf automake libtool pkg-config libpng-dev libjpeg8-dev libtiff5-dev libicu-dev \
-#         libpango1.0-dev autoconf-archive
+    apt-get install -y tesseract-ocr libtesseract-dev
 
 # # Set working directory
 WORKDIR /app
@@ -34,13 +32,13 @@ RUN mkdir src && cd /app/src && \
 # ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 
 # # Upgrades
-RUN pip3 install --upgrade pip
-RUN pip3 install --upgrade setuptools
+# RUN pip3 install --upgrade pip
+# RUN pip3 install --upgrade setuptools
 #wheel
 
 
 # # Install libraries using pip installer
-RUN pip3 install -r requirements.txt
+#RUN pip3 install -r requirements.txt
 
 # # Set the locale
 # RUN apt-get install -y locales && locale-gen en_US.UTF-8
