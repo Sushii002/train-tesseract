@@ -38,19 +38,6 @@ ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 # Upgrades
 RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade setuptools
-# wheel
-
-
-# Skip RUST installation for cryptography dependence
-# ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 # Install libraries using pip installer
 RUN pip3 install -r requirements.txt
-
-# Set the locale
-# RUN apt-get install -y locales && locale-gen en_US.UTF-8
-# ENV LC_ALL=en_US.UTF-8
-# ENV LANG=en_US.UTF-8
-# ENV LANGUAGE=en_US.UTF-8
-
-# make training MODEL_NAME=dws START_MODEL=fra PSM=7 TESSDATA=/usr/local/share/tessdata

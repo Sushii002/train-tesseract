@@ -20,14 +20,11 @@ docker-compose -f docker.dev.yml up
 docker exec -ti train-ocr bash
 ```
  - Create a ground truth folder and migrate all the training images and transcriptions into it
- -
- ```shell
-cp -r /dws-ground-truth/* /app/src/tesstrain/data/dws-ground-truth/
-```
+
 ## Training
 
 ```shell
-make training MODEL_NAME=dws START_MODEL=fra PSM=7 TESSDATA=/usr/local/share/tessdata 
+make training MODEL_NAME=dws START_MODEL=fra PSM=7 TESSDATA=/usr/local/share/tessdata MAX_ITERATIONS=1000
 ```
 
 Here's a list of other important training parameters that you can explore:
